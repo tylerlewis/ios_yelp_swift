@@ -8,7 +8,14 @@
 
 import UIKit
 
-class BusinessesViewController: UIViewController {
+class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    
+    /* Outlets */
+    @IBOutlet weak var businessesViewNavigationItem: UINavigationItem!
+    @IBOutlet weak var businessesTableView: UITableView!
+    
+    /* Programmtic UI elements */
+    var searchBar: UISearchBar!
     
     var businesses: [Business]!
     
@@ -20,10 +27,14 @@ class BusinessesViewController: UIViewController {
             self.businesses = businesses
             if let businesses = businesses {
                 for business in businesses {
+                    print("\n")
                     print(business.name!)
                     print(business.address!)
+                    print(business.imageURL!)
                 }
             }
+            
+            self.businessesTableView.reloadData()
             
             }
         )
@@ -39,11 +50,32 @@ class BusinessesViewController: UIViewController {
          }
          */
         
+        searchBar = UISearchBar()
+        searchBar.sizeToFit()
+        navigationItem.titleView = searchBar
+        
+        businessesTableView.delegate = self
+        businessesTableView.dataSource = self
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.businesses?.count ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = businessesTableView.dequeueReusableCell(withIdentifier: "BusinessTableCell") as! BusinessTableCell
+        
+        let business = businesses[indexPath.row]
+        cell.business = business
+        cell.initialize()
+        
+        return cell
     }
     
     /*
