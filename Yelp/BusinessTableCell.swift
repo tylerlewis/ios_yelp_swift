@@ -26,6 +26,9 @@ class BusinessTableCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
+        businessNameLabel.font = UIFont.boldSystemFont(ofSize: 17)
+        businessAddressLabel.font = UIFont.boldSystemFont(ofSize: 13)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -39,7 +42,11 @@ class BusinessTableCell: UITableViewCell {
         businessNameLabel.text = business.name
         businessDistanceLabel.text = business.distance
         ratingImageView.setImageWith(business.ratingImageURL!)
-        reviewCountLabel.text = business.reviewCount?.stringValue
+        if let reviewCount = business.reviewCount {
+            reviewCountLabel.text = "\(reviewCount.stringValue) Reviews"
+        } else {
+            reviewCountLabel.text = "No Reviews"
+        }
         businessAddressLabel.text = business.address
         businessCategoriesLabel.text = business.categories
     }

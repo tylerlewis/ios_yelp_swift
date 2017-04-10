@@ -12,6 +12,7 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
     
     /* Outlets */
     @IBOutlet weak var businessesViewNavigationItem: UINavigationItem!
+    @IBOutlet weak var businessesFilterButton: UIButton!
     @IBOutlet weak var businessesTableView: UITableView!
     
     /* Programmtic UI elements */
@@ -31,6 +32,7 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
                     print(business.name!)
                     print(business.address!)
                     print(business.imageURL!)
+                    print(business.ratingImageURL!)
                 }
             }
             
@@ -50,12 +52,22 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
          }
          */
         
+        self.navigationController!.navigationBar.backgroundColor = UIColor.red
+        
+        
+        businessesFilterButton.layer.backgroundColor = UIColor.red.cgColor
+        businessesFilterButton.layer.borderWidth = 1
+        businessesFilterButton.layer.cornerRadius = 5
+        businessesFilterButton.layer.borderColor = UIColor.white.cgColor
+        
         searchBar = UISearchBar()
         searchBar.sizeToFit()
-        navigationItem.titleView = searchBar
+        businessesViewNavigationItem.titleView = searchBar
         
         businessesTableView.delegate = self
         businessesTableView.dataSource = self
+        businessesTableView.estimatedRowHeight = 100
+        businessesTableView.rowHeight = UITableViewAutomaticDimension
     }
     
     override func didReceiveMemoryWarning() {
@@ -70,6 +82,9 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = businessesTableView.dequeueReusableCell(withIdentifier: "BusinessTableCell") as! BusinessTableCell
+        
+        cell.separatorInset = UIEdgeInsets.zero
+        cell.layoutMargins = UIEdgeInsets.zero
         
         let business = businesses[indexPath.row]
         cell.business = business
