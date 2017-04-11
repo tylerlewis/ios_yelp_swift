@@ -152,33 +152,9 @@
             <point key="canvasLocation" x="3666.4000000000001" y="357.57121439280365"/>
         </scene>
         <!--Filter-->
-        <scene sceneID="8ln-DW-kC9">
-            <objects>
-                <viewController id="L2Z-dR-urF" customClass="FilterViewController" customModule="Yelp" customModuleProvider="target" sceneMemberID="viewController">
-                    <navigationItem key="navigationItem" title="Filter" id="ziZ-gK-uIv">
-                        <barButtonItem key="backBarButtonItem" title="Cancel" id="RhN-z3-bXW"/>
-                        <barButtonItem key="rightBarButtonItem" style="plain" id="1YX-56-NoY">
-                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="uJ0-pQ-uRL">
-                                <rect key="frame" x="276" y="7" width="83" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <state key="normal" title="Search">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
-                        </barButtonItem>
-                    </navigationItem>
-                    <connections>
-                        <outlet property="filterTableView" destination="6op-CB-MFr" id="99T-il-oId"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="KgT-Lu-vZG" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3664.8000000000002" y="1153.6731634182909"/>
-        </scene>
-        <!--Filter View Controller-->
         <scene sceneID="U7k-10-pEO">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LFo-dI-s70" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="Iqb-ag-nLh" customClass="FilterViewController" customModule="Yelp" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Viz-Mg-iTc"/>
@@ -235,12 +211,24 @@
                             <constraint firstItem="E8O-F1-ayg" firstAttribute="top" secondItem="6op-CB-MFr" secondAttribute="bottom" id="u73-Qz-MFs"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="vkP-3J-ROy"/>
+                    <navigationItem key="navigationItem" title="Filter" id="vkP-3J-ROy">
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="OxO-Fv-5u9">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="x6H-fx-f2B">
+                                <rect key="frame" x="276" y="7" width="83" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Search">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onSearchButtonTap:" destination="Iqb-ag-nLh" eventType="touchDown" id="aYD-KF-Rhp"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="filterTableView" destination="6op-CB-MFr" id="H1L-gm-9wZ"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="LFo-dI-s70" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4415" y="358"/>
         </scene>

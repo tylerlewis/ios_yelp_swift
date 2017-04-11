@@ -8,7 +8,7 @@
 
 import UIKit
 
-class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, FilterViewControllerDelegate {
     
     /* Outlets */
     @IBOutlet weak var businessesViewNavigationItem: UINavigationItem!
@@ -41,17 +41,6 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
             }
         )
         
-        /* Example of Yelp search with more search options specified
-         Business.searchWithTerm("Restaurants", sort: .Distance, categories: ["asianfusion", "burgers"], deals: true) { (businesses: [Business]!, error: NSError!) -> Void in
-         self.businesses = businesses
-         
-         for business in businesses {
-         print(business.name!)
-         print(business.address!)
-         }
-         }
-         */
-        
         self.navigationController!.navigationBar.backgroundColor = UIColor.red
         self.navigationController!.navigationBar.tintColor = UIColor.white;
         self.navigationController!.navigationBar.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: 60)
@@ -63,6 +52,8 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         
         searchBar = UISearchBar()
         searchBar.sizeToFit()
+        searchBar.delegate = self
+        searchBar.placeholder = "Restaurants"
         businessesViewNavigationItem.titleView = searchBar
         
         businessesTableView.delegate = self
@@ -94,14 +85,30 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         return cell
     }
     
-    /*
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        Business.searchWithTerm(term: searchText) { (businesses, error) in
+            self.businesses = businesses
+            self.businessesTableView.reloadData()
+        }
+    }
+    
+    func filterViewController(filterViewController: FilterViewController, didUpdateFilters filters: [String: Any]) {
+        let deals = filters["deals"] as? Bool
+        let distance = filters["distance"] as? Int
+        let sort = filters["sort"] as? YelpSortMode
+        let categories = filters["categories"] as? [String]
+        Business.searchWithTerm(term: "Restaurants", sort: sort, categories: categories, deals: deals) { (businesses, error) in
+            self.businesses = businesses
+            self.businessesTableView.reloadData()
+        }
+    }
+    
      // MARK: - Navigation
      
      // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let filterViewController = segue.destination as! FilterViewController
+        filterViewController.delegate = self
      }
-     */
     
 }

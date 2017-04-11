@@ -11,9 +11,11 @@ import Foundation
 class FilterItem: NSObject {
     var text: String?
     var isOn: Bool?
+    var value: Any?
     
-    init(text: String, isOn: Bool) {
+    init(text: String, isOn: Bool, value: Any) {
         self.text = text
         self.isOn = isOn
+        self.value = value
     }
 }

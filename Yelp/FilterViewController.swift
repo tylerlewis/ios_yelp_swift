@@ -8,10 +8,16 @@
 
 import UIKit
 
+protocol FilterViewControllerDelegate: class {
+    func filterViewController(filterViewController: FilterViewController, didUpdateFilters filters: [String: Any])
+}
+
 class FilterViewController: UIViewController, UITableViewDataSource, UITableViewDelegate,
     FilterSwitchCellDelegate {
     
     @IBOutlet weak var filterTableView: UITableView!
+    
+    weak var delegate: FilterViewControllerDelegate?
     
     let HeaderViewIdentifier = "TableViewHeaderView"
     
@@ -100,6 +106,29 @@ class FilterViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     
+    @IBAction func onSearchButtonTap(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+        navigationController?.popViewController(animated: true)
+
+        var filterPayload = [String: Any]()
+        
+        filterPayload["deals"] = filters[0].displayedOptions[0].isOn
+        
+        filterPayload["distance"] = filters[1].displayedOptions[0].value
+        
+        filterPayload["sort"] = filters[2].displayedOptions[0].value
+        
+        var categories = [String]()
+        for option in filters[3].displayedOptions {
+            if option.isOn! {
+                categories.append(option.value as! String)
+            }
+        }
+        filterPayload["categories"] = categories
+        
+        delegate?.filterViewController(filterViewController: self, didUpdateFilters: filterPayload)
+    }
+    
     func filterSwitchCellDidToggle(cell: FilterTableCell, newValue: Bool) {
         let indexPath = filterTableView.indexPath(for: cell)!
         let filter = filters[indexPath.section]
@@ -122,29 +151,30 @@ class FilterViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func initFilters() {
+        // TODO - Clean this up, duplicated code
         filters = [
-            Filter(header: "", options: [FilterItem(text: "Offering a deal", isOn: false)], displayedOptions: [FilterItem(text: "Offering a deal", isOn: false)], isDisplayingOptions: false, persistList: false),
+            Filter(header: "", options: [FilterItem(text: "Offering a deal", isOn: false, value: false)], displayedOptions: [FilterItem(text: "Offering a deal", isOn: false, value: false)], isDisplayingOptions: false, persistList: false),
             Filter(header: "Distance", options: [
-                FilterItem(text: "Auto", isOn: true),
-                FilterItem(text: "0.3 miles", isOn: false),
-                FilterItem(text: "1 mile", isOn: false),
-                FilterItem(text: "5 miles", isOn: false),
-                FilterItem(text: "20 miles", isOn: false)
-                ], displayedOptions: [FilterItem(text: "Auto", isOn: true)], isDisplayingOptions: false, persistList: false),
+                FilterItem(text: "Auto", isOn: true, value: 0),
+                FilterItem(text: "0.3 miles", isOn: false, value: 1),
+                FilterItem(text: "1 mile", isOn: false, value: 2),
+                FilterItem(text: "5 miles", isOn: false, value: 3),
+                FilterItem(text: "20 miles", isOn: false, value: 4)
+                ], displayedOptions: [FilterItem(text: "Auto", isOn: true, value: 0)], isDisplayingOptions: false, persistList: false),
             Filter(header: "Sort By", options: [
-                FilterItem(text: "Best Match", isOn: true),
-                FilterItem(text: "Distance", isOn: false),
-                FilterItem(text: "Rating", isOn: false),
-                FilterItem(text: "Most Reviewed", isOn: false)
-                ], displayedOptions: [FilterItem(text: "Best Match", isOn: true)], isDisplayingOptions: false, persistList: false)
+                FilterItem(text: "Best Match", isOn: true, value: YelpSortMode.bestMatched),
+                FilterItem(text: "Distance", isOn: false, value: YelpSortMode.distance),
+                FilterItem(text: "Rating", isOn: false, value: YelpSortMode.highestRated),
+                FilterItem(text: "Most Reviewed", isOn: false, value: YelpSortMode.highestRated)
+                ], displayedOptions: [FilterItem(text: "Best Match", isOn: true, value: YelpSortMode.bestMatched)], isDisplayingOptions: false, persistList: false)
         ]
         // TODO - Use full list of categories with expand button
         let categoryFilterOptions = [
-            FilterItem(text: "Afghan", isOn: false),
-            FilterItem(text: "African", isOn: false),
-            FilterItem(text: "American, New", isOn: false),
-            FilterItem(text: "American, Traditional", isOn: false),
-            FilterItem(text: "Chinese", isOn: false)
+            FilterItem(text: "Afghan", isOn: false, value: "afghani"),
+            FilterItem(text: "African", isOn: false, value: "african"),
+            FilterItem(text: "American, New", isOn: false, value: "newamerican"),
+            FilterItem(text: "American, Traditional", isOn: false, value: "tradamerican"),
+            FilterItem(text: "Chinese", isOn: false, value: "chinese")
         ]
         filters.append(Filter(header: "Category", options: categoryFilterOptions, displayedOptions: categoryFilterOptions, isDisplayingOptions: false, persistList: true))
     }
