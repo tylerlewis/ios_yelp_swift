@@ -11,13 +11,15 @@ import Foundation
 class Filter: NSObject {
     let header: String?
     let options: [FilterItem]!
-    var displayOption: FilterItem!
+    var displayedOptions: [FilterItem]!
     var isDisplayingOptions: Bool?
+    var persistList: Bool?
     
-    init(header: String?, options: [FilterItem], displayOption: FilterItem, isDisplayingOptions: Bool?) {
+    init(header: String?, options: [FilterItem], displayedOptions: [FilterItem], isDisplayingOptions: Bool?, persistList: Bool?) {
         self.header = header
         self.options = options
-        self.displayOption = displayOption
+        self.displayedOptions = displayedOptions
         self.isDisplayingOptions = isDisplayingOptions ?? false
+        self.persistList = persistList ?? false
     }
 }
