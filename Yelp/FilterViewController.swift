@@ -8,13 +8,6 @@
 
 import UIKit
 
-enum FilterRowIdentifier: String {
-    case Deals = "Deals"
-    case Distance = "Distance"
-    case SortBy = "Sort By"
-    case Category = "Category"
-}
-
 class FilterViewController: UIViewController, UITableViewDataSource, UITableViewDelegate,
     FilterSwitchCellDelegate {
     
@@ -23,20 +16,20 @@ class FilterViewController: UIViewController, UITableViewDataSource, UITableView
     let HeaderViewIdentifier = "TableViewHeaderView"
     
     let filters: [Filter] = [
-        Filter(header: "", options: [FilterItem(text: "Offering a deal", isOn: false)], optionDisplayIndex: 0, isDisplayingOptions: false),
+        Filter(header: "", options: [FilterItem(text: "Offering a deal", isOn: false)], displayOption: FilterItem(text: "Offering a deal", isOn: false), isDisplayingOptions: false),
         Filter(header: "Distance", options: [
             FilterItem(text: "Auto", isOn: true),
             FilterItem(text: "0.3 miles", isOn: false),
             FilterItem(text: "1 mile", isOn: false),
             FilterItem(text: "5 miles", isOn: false),
             FilterItem(text: "20 miles", isOn: false)
-        ], optionDisplayIndex: 0, isDisplayingOptions: false),
+            ], displayOption: FilterItem(text: "Auto", isOn: true), isDisplayingOptions: false),
         Filter(header: "Sort By", options: [
             FilterItem(text: "Best Match", isOn: true),
             FilterItem(text: "Distance", isOn: false),
             FilterItem(text: "Rating", isOn: false),
             FilterItem(text: "Most Reviewed", isOn: false)
-            ], optionDisplayIndex: 0, isDisplayingOptions: false)
+            ], displayOption: FilterItem(text: "Best Match", isOn: true), isDisplayingOptions: false)
     ]
     
     override func viewDidLoad() {
@@ -70,7 +63,11 @@ class FilterViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let filter = filters[indexPath.section]
         let cell = tableView.dequeueReusableCell(withIdentifier: "FilterTableCell") as! FilterTableCell
-        cell.filterRowIdentifier = filter.options[indexPath.row]
+        if filter.isDisplayingOptions! {
+            cell.filterRowIdentifier = filter.options[indexPath.row]
+        } else {
+            cell.filterRowIdentifier = filter.displayOption
+        }
         cell.delegate = self
         
         cell.layer.borderWidth = 1
@@ -104,8 +101,29 @@ class FilterViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        filterTableView.deselectRow(at: indexPath, animated: true)
+        let filter = filters[indexPath.section]
+        // Render all options on select
+        if filter.options.count > 1 {
+           filter.isDisplayingOptions = true
+        }
+        filterTableView.reloadData()
+    }
+    
     func filterSwitchCellDidToggle(cell: FilterTableCell, newValue: Bool) {
-        
+        let indexPath = filterTableView.indexPath(for: cell)!
+        let filter = filters[indexPath.section]
+        let selectedFilter = filter.options[indexPath.row]
+        selectedFilter.isOn = true
+        for option in filter.options {
+            if option != selectedFilter {
+                option.isOn = false
+            }
+        }
+        filter.isDisplayingOptions = false
+        filter.displayOption = filter.options[indexPath.row]
+        filterTableView.reloadData()
     }
 
     /*

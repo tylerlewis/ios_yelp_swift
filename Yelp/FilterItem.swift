@@ -9,8 +9,8 @@
 import Foundation
 
 class FilterItem: NSObject {
-    let text: String?
-    let isOn: Bool?
+    var text: String?
+    var isOn: Bool?
     
     init(text: String, isOn: Bool) {
         self.text = text
