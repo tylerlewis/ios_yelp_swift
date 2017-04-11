@@ -53,7 +53,8 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
          */
         
         self.navigationController!.navigationBar.backgroundColor = UIColor.red
-        
+        self.navigationController!.navigationBar.tintColor = UIColor.white;
+        self.navigationController!.navigationBar.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: 60)
         
         businessesFilterButton.layer.backgroundColor = UIColor.red.cgColor
         businessesFilterButton.layer.borderWidth = 1
